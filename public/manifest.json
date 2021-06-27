@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "React Guess The Word Game",
+  "name": "Guess The Word Game built with React by @luvagu",
   "icons": [
     {
       "src": "favicon.ico",
