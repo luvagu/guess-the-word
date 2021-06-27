@@ -87,9 +87,9 @@ article {
 .left-arm {
   position: absolute;
 	top: 75px;
-	left: 25%;
-  transform-origin: 100% 100%;
-	transform: rotate(-45deg) translateY(-100%);
+	right: 50%;
+  transform-origin: 100% 0;
+	transform: rotate(-45deg) translateY(-50%);
 	width: 60px;
 	height: 1px;
 	border-top: 2px solid black;
@@ -114,4 +114,26 @@ article {
 	width: 1px;
 	height: 75px;
 	border-left: 2px solid black;
+}
+
+.left-leg {
+  position: absolute;
+	top: 75px;
+	right: 50%;
+  transform-origin: 100% 0;
+	transform: rotate(-45deg) translateY(-50%);
+	width: 60px;
+	height: 1px;
+	border-top: 2px solid black;
+}
+
+.right-leg {
+  position: absolute;
+	top: 75px;
+	left: 50%;
+  transform-origin: 0 100%;
+	transform: rotate(45deg);
+	width: 60px;
+	height: 1px;
+	border-top: 2px solid black;
 }

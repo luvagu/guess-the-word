@@ -11,7 +11,7 @@ function Body() {
 			<Neck />
       <LeftArm />
       <RightArm />
-			{/* <Torso /> */}
+			<Torso />
 		</div>
 	)
 }
