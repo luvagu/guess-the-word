@@ -96,6 +96,14 @@ article {
 }
 
 .right-arm {
+  position: absolute;
+	top: 75px;
+	left: 50%;
+  transform-origin: 0 100%;
+	transform: rotate(45deg);
+	width: 60px;
+	height: 1px;
+	border-top: 2px solid black;
 }
 
 .torso {

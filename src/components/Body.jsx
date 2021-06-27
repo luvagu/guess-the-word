@@ -1,6 +1,7 @@
 import Head from './Head'
 import Neck from './Neck'
 import LeftArm from './LeftArm'
+import RightArm from './RightArm'
 import Torso from './Torso'
 
 function Body() {
@@ -9,6 +10,7 @@ function Body() {
 			<Head />
 			<Neck />
       <LeftArm />
+      <RightArm />
 			{/* <Torso /> */}
 		</div>
 	)
