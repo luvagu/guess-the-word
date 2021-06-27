@@ -1,12 +1,14 @@
 import Head from './Head'
-import Neck from './Head'
+import Neck from './Neck'
+import Torso from './Torso'
 
 function Body() {
 	return (
-		<aside>
+		<div className="body-container">
 			<Head />
 			<Neck />
-		</aside>
+			<Torso />
+		</div>
 	)
 }
 

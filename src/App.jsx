@@ -6,7 +6,9 @@ function App() {
 			<header>
 				<h1>Guess The Word</h1>
 			</header>
-			<Body />
+			<aside>
+        <Body />
+      </aside>
 			<article>Main Content</article>
 		</div>
 	)
