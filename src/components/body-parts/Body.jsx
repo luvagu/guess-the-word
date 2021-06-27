@@ -8,7 +8,7 @@ import LeftLeg from './LeftLeg'
 import RightLeg from './RightLeg'
 import LooseMsg from '../LooseMsg'
 
-function Body({ numOfBodyPartsToShow = 0 }) {
+function Body({ numOfBodyPartsToShow }) {
 	const bodyParts = [
 		<Head />,
 		<Neck />,
