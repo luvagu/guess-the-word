@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import Body from './components/body-parts/Body'
 
 function App() {
-	const [faults, setFaults] = useState(0)
-	const [bodyPartsToShow, setBodyPartsToShow] = useState(faults)
-	const [asserts, setAsserts] = useState([])
+	const [remainigLifes, setRemainigLifes] = useState(7)
+	const [bodyPartsToShow, setBodyPartsToShow] = useState(0)
 	const [secretWord, setSecretWord] = useState('')
 	const [splitSecretWord, setSplitSecretWord] = useState([])
 	const [gameStarted, setGameStarted] = useState(false)
-  const [remainigLifes, setremainigLifes] = useState(7)
+	const [prevGuesses, setPrevGuesses] = useState('')
 
 	const letterInput = useRef()
 
@@ -16,22 +15,39 @@ function App() {
 		e.preventDefault()
 
 		if (secretWord) {
-			setSplitSecretWord(
-				secretWord.split('').map(letter => ({ letter, discovered: false }))
-			)
+			const splitWord = secretWord
+				.split('')
+				.map(letter => ({ letter, discovered: false }))
+			setSplitSecretWord(splitWord)
 			setGameStarted(true)
 		}
 	}
 
-	const checkInSecretWord = () => {}
-
-	console.log(splitSecretWord)
+	const checkInSecretWord = e => {
+		const letter = e.target.value.toLowerCase()
+		letterInput.current.blur()
+		// e.target.value = ''
+		if (secretWord.includes(letter)) {
+			const newSplitSecretWord = [...splitSecretWord].map(obj => {
+				if (obj.letter === letter) obj.discovered = true
+				return obj
+			})
+			setSplitSecretWord(newSplitSecretWord)
+		} else {
+			setRemainigLifes(remainigLifes - 1)
+      setBodyPartsToShow(bodyPartsToShow + 1)
+      const wrongLetters = prevGuesses.length > 1 ? `${prevGuesses}-${letter}` : letter
+			setPrevGuesses(wrongLetters)
+		}
+	}
 
 	useEffect(() => {
 		if (splitSecretWord.length) {
 			letterInput.current.focus()
 		}
 	}, [splitSecretWord])
+
+	console.log(secretWord)
 
 	return (
 		<div className='wrapper'>
@@ -59,7 +75,12 @@ function App() {
 								placeholder='Guess letter'
 								onChange={checkInSecretWord}
 							/>
-              <p>Lifes left: {remainigLifes}</p>
+							<p>Lifes left: {remainigLifes}</p>
+							{prevGuesses && (
+								<p>
+									Previous wrong guesses: <span>{prevGuesses}</span>
+								</p>
+							)}
 						</div>
 					</>
 				) : (

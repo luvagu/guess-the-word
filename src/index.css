@@ -221,5 +221,13 @@ input::placeholder {
 	text-align: center;
 	font-size: 1.2rem;
 	max-width: 150px;
+}
+
+.letter-input > * {
 	margin-bottom: 1.5rem;
+}
+
+p > span {
+	text-transform: uppercase;
+	color: darkred;
 }
