@@ -45,11 +45,22 @@ body {
 
 header {
 	grid-area: header;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 h1 {
-	text-align: center;
 	color: darkgreen;
+}
+
+.scores {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+  align-items: center;
+	font-size: 1.2rem;
 }
 
 aside {
@@ -189,6 +200,14 @@ article {
 	border-bottom: 2px solid darkgreen;
 	border-radius: 5px;
 	text-transform: uppercase;
+}
+
+.red {
+	color: red;
+}
+
+.blue {
+	color: blue;
 }
 
 input, button {

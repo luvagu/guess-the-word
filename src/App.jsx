@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Body from './components/body-parts/Body'
 
+const checkWin = word => word.every(({ discovered }) => discovered === true)
+
 function App() {
 	const [remainigLifes, setRemainigLifes] = useState(7)
 	const [bodyPartsToShow, setBodyPartsToShow] = useState(0)
@@ -26,17 +28,20 @@ function App() {
 	const checkInSecretWord = e => {
 		const letter = e.target.value.toLowerCase()
 		letterInput.current.blur()
-		// e.target.value = ''
 		if (secretWord.includes(letter)) {
 			const newSplitSecretWord = [...splitSecretWord].map(obj => {
 				if (obj.letter === letter) obj.discovered = true
 				return obj
 			})
 			setSplitSecretWord(newSplitSecretWord)
+			if (checkWin(splitSecretWord)) {
+				console.log("it's a win")
+			}
 		} else {
 			setRemainigLifes(remainigLifes - 1)
-      setBodyPartsToShow(bodyPartsToShow + 1)
-      const wrongLetters = prevGuesses.length > 1 ? `${prevGuesses}-${letter}` : letter
+			setBodyPartsToShow(bodyPartsToShow + 1)
+			const wrongLetters =
+				prevGuesses.length > 0 ? `${prevGuesses}-${letter}` : letter
 			setPrevGuesses(wrongLetters)
 		}
 	}
@@ -47,12 +52,15 @@ function App() {
 		}
 	}, [splitSecretWord])
 
-	console.log(secretWord)
-
 	return (
 		<div className='wrapper'>
 			<header>
 				<h1>Guess The Word</h1>
+				<div className='scores'>
+					<span className='blue'>0 Blue</span>
+          <span>vs</span>
+					<span className='red'>Red 0</span>
+				</div>
 			</header>
 			<aside>
 				<Body numOfBodyPartsToShow={bodyPartsToShow} />
@@ -63,7 +71,7 @@ function App() {
 						<div className='secret-word'>
 							{splitSecretWord.map(({ letter, discovered }, idx) => (
 								<div key={idx} className='secret-letter'>
-									{discovered ? letter : '?'}
+									{discovered ? letter : <span className='red'>?</span>}
 								</div>
 							))}
 						</div>
@@ -78,7 +86,7 @@ function App() {
 							<p>Lifes left: {remainigLifes}</p>
 							{prevGuesses && (
 								<p>
-									Previous wrong guesses: <span>{prevGuesses}</span>
+									Wrong guesses: <span>{prevGuesses}</span>
 								</p>
 							)}
 						</div>
