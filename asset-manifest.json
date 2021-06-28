@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/guess-the-word/static/css/main.eea41309.chunk.css",
+    "main.js": "/guess-the-word/static/js/main.24943c54.chunk.js",
+    "main.js.map": "/guess-the-word/static/js/main.24943c54.chunk.js.map",
+    "runtime-main.js": "/guess-the-word/static/js/runtime-main.44f0f413.js",
+    "runtime-main.js.map": "/guess-the-word/static/js/runtime-main.44f0f413.js.map",
+    "static/js/2.c7ba7b5a.chunk.js": "/guess-the-word/static/js/2.c7ba7b5a.chunk.js",
+    "static/js/2.c7ba7b5a.chunk.js.map": "/guess-the-word/static/js/2.c7ba7b5a.chunk.js.map",
+    "static/js/3.72573332.chunk.js": "/guess-the-word/static/js/3.72573332.chunk.js",
+    "static/js/3.72573332.chunk.js.map": "/guess-the-word/static/js/3.72573332.chunk.js.map",
+    "index.html": "/guess-the-word/index.html",
+    "static/css/main.eea41309.chunk.css.map": "/guess-the-word/static/css/main.eea41309.chunk.css.map",
+    "static/js/2.c7ba7b5a.chunk.js.LICENSE.txt": "/guess-the-word/static/js/2.c7ba7b5a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.44f0f413.js",
+    "static/js/2.c7ba7b5a.chunk.js",
+    "static/css/main.eea41309.chunk.css",
+    "static/js/main.24943c54.chunk.js"
+  ]
+}
