@@ -1,4 +1,4 @@
-# React 2 Player Guess The Word
+# React 2 Player Guess The Word Game
 
 ## Try the demo at:
 
