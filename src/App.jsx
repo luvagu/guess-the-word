@@ -5,9 +5,9 @@ const checkWin = word => word.every(({ discovered }) => discovered === true)
 
 const PLAYERS = ['red', 'blue']
 
-const getRandomPlayerTurn = () => {
-	return PLAYERS[Math.floor(Math.random() * PLAYERS.length)]
-}
+const getRandomPlayerTurn = () =>	PLAYERS[Math.floor(Math.random() * PLAYERS.length)]
+
+const switchTurns = currentTurn => (currentTurn === 'red' ? 'blue' : 'red')
 
 function App() {
 	const [remainigLifes, setRemainigLifes] = useState(7)
@@ -18,9 +18,7 @@ function App() {
 	const [roundEnded, setRoundEnded] = useState(false)
 	const [prevGuesses, setPrevGuesses] = useState('')
 	const [challenger, setChallenger] = useState(getRandomPlayerTurn())
-	const [opponent, setOpponent] = useState(
-		challenger === 'red' ? 'blue' : 'red'
-	)
+	const [opponent, setOpponent] = useState(switchTurns(challenger))
 	const [winner, setWinner] = useState('')
 	const [scores, setScores] = useState({ red: 0, blue: 0 })
 
@@ -68,8 +66,8 @@ function App() {
 		setRemainigLifes(7)
 		setBodyPartsToShow(0)
 		setPrevGuesses('')
-		setChallenger(challenger === 'red' ? 'blue' : 'red')
-		setOpponent(opponent === 'red' ? 'blue' : 'red')
+		setChallenger(switchTurns(challenger))
+		setOpponent(switchTurns(opponent))
 	}
 
 	useEffect(() => {
