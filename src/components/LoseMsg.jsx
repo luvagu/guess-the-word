@@ -1,5 +1,5 @@
-function LooseMsg({ looser }) {
-	return <div className={`loose-msg bg-${looser}`}>You Lose!</div>
+function LooseMsg({ loser }) {
+	return <div className={`loose-msg bg-${loser}`}>{loser} Loses!</div>
 }
 
 export default LooseMsg

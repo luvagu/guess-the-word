@@ -117,7 +117,7 @@ function App() {
 		<Container>
 			<Header scores={scores} />
 			<Sidebar>
-				<Body numOfBodyPartsToShow={bodyPartsToShow} />
+				<Body numOfBodyPartsToShow={bodyPartsToShow} loser={winner === 'red' ? 'blue' : 'red'} />
 			</Sidebar>
 			<Content>
 				{gameStarted ? (

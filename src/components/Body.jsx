@@ -8,7 +8,7 @@ import LeftLeg from './body-parts/LeftLeg'
 import RightLeg from './body-parts/RightLeg'
 import LoseMsg from './LoseMsg'
 
-function Body({ numOfBodyPartsToShow }) {
+function Body({ numOfBodyPartsToShow, loser }) {
 	const bodyParts = [
 		<Head key='Head' />,
 		<Neck key='Neck' />,
@@ -23,7 +23,7 @@ function Body({ numOfBodyPartsToShow }) {
 		<div className='body-container'>
 			<Hanger />
 			{numOfBodyPartsToShow > 0 && bodyParts.slice(0, numOfBodyPartsToShow)}
-			{numOfBodyPartsToShow === 7 && <LoseMsg />}
+			{numOfBodyPartsToShow === 7 && <LoseMsg loser={loser} />}
 		</div>
 	)
 }
