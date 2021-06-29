@@ -1,19 +1,31 @@
-import { useEffect, useRef, useState } from 'react'
-import Body from './components/body-parts/Body'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import Container from './components/Container'
+import Header from './components/Header'
+import Sidebar from './components/Sidebar'
+import Content from './components/Content'
+import Body from './components/Body'
+
+const PLAYERS = ['red', 'blue']
+const INIT_LIFES = 7
+
+const splitWordCovertToObject = word =>
+	word.split('').map(letter => ({ letter, discovered: false }))
 
 const checkWin = word => word.every(({ discovered }) => discovered === true)
 
-const PLAYERS = ['red', 'blue']
+const makeHeartsArray = num => new Array(num).fill('💖')
 
-const getRandomPlayerTurn = () =>	PLAYERS[Math.floor(Math.random() * PLAYERS.length)]
+const getRandomPlayerTurn = () =>
+	PLAYERS[Math.floor(Math.random() * PLAYERS.length)]
 
 const switchTurns = currentTurn => (currentTurn === 'red' ? 'blue' : 'red')
 
 function App() {
-	const [remainigLifes, setRemainigLifes] = useState(7)
+	const [remainigLifes, setRemainigLifes] = useState(INIT_LIFES)
 	const [bodyPartsToShow, setBodyPartsToShow] = useState(0)
 	const [secretWord, setSecretWord] = useState('')
 	const [splitSecretWord, setSplitSecretWord] = useState([])
+	const [clue, setClue] = useState('')
 	const [gameStarted, setGameStarted] = useState(false)
 	const [roundEnded, setRoundEnded] = useState(false)
 	const [prevGuesses, setPrevGuesses] = useState('')
@@ -21,6 +33,7 @@ function App() {
 	const [opponent, setOpponent] = useState(switchTurns(challenger))
 	const [winner, setWinner] = useState('')
 	const [scores, setScores] = useState({ red: 0, blue: 0 })
+	const [apiStatus, setApiStatus] = useState({ loading: false, error: false })
 
 	const letterInput = useRef()
 
@@ -28,12 +41,31 @@ function App() {
 		e.preventDefault()
 
 		if (secretWord) {
-			const splitWord = secretWord
-				.split('')
-				.map(letter => ({ letter, discovered: false }))
-			setSplitSecretWord(splitWord)
+			setSplitSecretWord(splitWordCovertToObject(secretWord))
 			setGameStarted(true)
 		}
+	}
+
+	const getRandomWord = async () => {
+		setApiStatus(prevStatus => ({ ...prevStatus, loading: true }))
+		try {
+			const API_URL = 'https://san-random-words.vercel.app/'
+			const response = await fetch(API_URL)
+			const data = await response.json()
+			const { word, definition } = data[0]
+			setSecretWord(word.toLowerCase())
+			setSplitSecretWord(splitWordCovertToObject(word.toLowerCase()))
+			setClue(definition)
+			setGameStarted(true)
+		} catch (error) {
+			console.log(error.message)
+			setApiStatus(prevStatus => ({
+				...prevStatus,
+				error:
+					'Error loading random word. Please try again or enter word manually.',
+			}))
+		}
+		setApiStatus(prevStatus => ({ ...prevStatus, loading: false }))
 	}
 
 	const checkInSecretWord = e => {
@@ -63,7 +95,7 @@ function App() {
 	const resetGame = () => {
 		setGameStarted(false)
 		setRoundEnded(false)
-		setRemainigLifes(7)
+		setRemainigLifes(INIT_LIFES)
 		setBodyPartsToShow(0)
 		setPrevGuesses('')
 		setChallenger(switchTurns(challenger))
@@ -82,21 +114,14 @@ function App() {
 	}, [remainigLifes, challenger])
 
 	return (
-		<div className='wrapper'>
-			<header>
-				<h1>Guess The Word</h1>
-				<div className='scores'>
-					<span className='blue'>{scores.blue} Blue</span>
-					<span>vs</span>
-					<span className='red'>Red {scores.red}</span>
-				</div>
-			</header>
-			<aside>
+		<Container>
+			<Header scores={scores} />
+			<Sidebar>
 				<Body numOfBodyPartsToShow={bodyPartsToShow} />
-			</aside>
-			<article>
+			</Sidebar>
+			<Content>
 				{gameStarted ? (
-					<>
+					<Fragment>
 						<div className='secret-word'>
 							{splitSecretWord.map(({ letter, discovered }, idx) => (
 								<div key={idx} className='secret-letter'>
@@ -106,7 +131,7 @@ function App() {
 						</div>
 						<div className='letter-input'>
 							{roundEnded ? (
-								<>
+								<Fragment>
 									<p>
 										<span className={winner}>{winner}</span> wins!
 									</p>
@@ -118,30 +143,39 @@ function App() {
 									<button type='button' onClick={resetGame}>
 										Start New Round
 									</button>
-								</>
+								</Fragment>
 							) : (
-								<input
-									ref={letterInput}
-									type='text'
-									maxLength='1'
-									placeholder='Enter guess'
-									onChange={checkInSecretWord}
-									onClick={e => (e.target.value = '')}
-								/>
-							)}
-							<p>
-								<span className={opponent}>{opponent}</span>'s lifes left:{' '}
-								{remainigLifes}
-							</p>
-							{prevGuesses && (
-								<p>
-									Wrong guesses: <span>{prevGuesses}</span>
-								</p>
+								<Fragment>
+									<input
+										ref={letterInput}
+										type='text'
+										maxLength='1'
+										placeholder='Enter guess'
+										onChange={checkInSecretWord}
+										onClick={e => (e.target.value = '')}
+									/>
+									<p>
+										<span className={opponent}>{opponent}</span>'s lifes:{' '}
+										{makeHeartsArray(remainigLifes).map((heart, idx) => (
+											<span key={idx}>{heart}</span>
+										))}
+									</p>
+									{clue && (
+										<p>
+											💡 Here is a clue: <span className='clue'>{clue}</span>
+										</p>
+									)}
+									{prevGuesses && (
+										<p>
+											Wrong guesses: <span>{prevGuesses}</span>
+										</p>
+									)}
+								</Fragment>
 							)}
 						</div>
-					</>
+					</Fragment>
 				) : (
-					<>
+					<Fragment>
 						<p>
 							It&apos;s <span className={challenger}>{challenger}</span>&apos;s
 							turn to challenge <span className={opponent}>{opponent}</span>!
@@ -154,10 +188,24 @@ function App() {
 							/>
 							<button type='submit'>Save</button>
 						</form>
-					</>
+						<p>or</p>
+						<button
+							type='button'
+							onClick={getRandomWord}
+							disabled={apiStatus.loading}
+						>
+							{apiStatus.loading ? 'Loading...' : 'Get Random Secret Word'}
+						</button>
+						{apiStatus.error && (
+							<p>
+								<br />
+								<span>{apiStatus.error}</span>
+							</p>
+						)}
+					</Fragment>
 				)}
-			</article>
-		</div>
+			</Content>
+		</Container>
 	)
 }
 

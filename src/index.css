@@ -71,7 +71,7 @@ article {
 	grid-area: content;
 }
 
-p {
+p, form {
 	margin-bottom: 1rem;
 }
 
@@ -233,6 +233,9 @@ button {
 button {
 	cursor: pointer;
 	text-transform: none;
+}
+
+form > button {
 	margin-left: 10px;
 }
 
@@ -262,4 +265,9 @@ input::placeholder {
 p > span {
 	text-transform: uppercase;
 	color: darkred;
+}
+
+.clue {
+	font-style: italic;
+	color: dodgerblue;
 }
