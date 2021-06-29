@@ -133,7 +133,7 @@ function App() {
 							{roundEnded ? (
 								<Fragment>
 									<p>
-										<span className={winner}>{winner}</span> wins!
+										<span className={winner}>{winner}</span> wins! 🥇
 									</p>
 									{winner === challenger && (
 										<p>
