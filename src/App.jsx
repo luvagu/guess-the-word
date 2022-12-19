@@ -1,205 +1,200 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import Container from './components/Container'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Content from './components/Content'
 import Body from './components/Body'
+import Keyboard from './components/Keyboard'
+import randomEnglishWords from 'random-words'
+import randomSpanishWords from 'random-spanish-words'
+import './App.css'
+import SecretWord from './components/SecretWord'
+import {
+	getRandomPlayerTurn,
+	normalizeLatinWord,
+	switchPlayers,
+} from './helpers'
 
 const PLAYERS = ['red', 'blue']
 const INIT_LIFES = 7
 
-const splitWordCovertToObject = word =>
-	word.split('').map(letter => ({ letter, discovered: false }))
-
-const checkWin = word => word.every(({ discovered }) => discovered === true)
-
-const makeHeartsArray = num => new Array(num).fill('💖')
-
-const getRandomPlayerTurn = () =>
-	PLAYERS[Math.floor(Math.random() * PLAYERS.length)]
-
-const switchTurns = currentTurn => (currentTurn === 'red' ? 'blue' : 'red')
-
 function App() {
-	const [remainigLifes, setRemainigLifes] = useState(INIT_LIFES)
-	const [bodyPartsToShow, setBodyPartsToShow] = useState(0)
 	const [secretWord, setSecretWord] = useState('')
-	const [splitSecretWord, setSplitSecretWord] = useState([])
-	const [clue, setClue] = useState('')
+	const [guessedLetters, setGuessedLetters] = useState([])
 	const [gameStarted, setGameStarted] = useState(false)
-	const [roundEnded, setRoundEnded] = useState(false)
-	const [prevGuesses, setPrevGuesses] = useState('')
-	const [challenger, setChallenger] = useState(getRandomPlayerTurn())
-	const [opponent, setOpponent] = useState(switchTurns(challenger))
-	const [winner, setWinner] = useState('')
+	const [challenger, setChallenger] = useState(getRandomPlayerTurn(PLAYERS))
+	const [opponent, setOpponent] = useState(switchPlayers(challenger))
 	const [scores, setScores] = useState({ red: 0, blue: 0 })
-	const [apiStatus, setApiStatus] = useState({ loading: false, error: false })
-
-	const letterInput = useRef()
+	const [error, setError] = useState(null)
 
 	const handleSubmit = e => {
 		e.preventDefault()
 
 		if (secretWord) {
-			setSplitSecretWord(splitWordCovertToObject(secretWord))
 			setGameStarted(true)
 		}
 	}
 
-	const getRandomWord = async () => {
-		setApiStatus(prevStatus => ({ ...prevStatus, loading: true }))
+	const getRandomWord = (lang = 'en') => {
+		setError(null)
+
 		try {
-			const API_URL = 'https://san-random-words.vercel.app/'
-			const response = await fetch(API_URL)
-			const data = await response.json()
-			const { word, definition } = data[0]
-			setSecretWord(word.toLowerCase())
-			setSplitSecretWord(splitWordCovertToObject(word.toLowerCase()))
-			setClue(definition)
+			const randomWord = normalizeLatinWord(
+				(lang === 'en'
+					? randomEnglishWords()
+					: randomSpanishWords()
+				).toUpperCase()
+			)
+			setSecretWord(randomWord)
 			setGameStarted(true)
 		} catch (error) {
-			console.log(error.message)
-			setApiStatus(prevStatus => ({
-				...prevStatus,
-				error:
-					'Error loading random word. Please try again or enter word manually.',
-			}))
+			setError(
+				`Error getting random "${lang}" word. Please try again or enter a word manually.`
+			)
 		}
-		setApiStatus(prevStatus => ({ ...prevStatus, loading: false }))
 	}
 
-	const checkInSecretWord = e => {
-		const letter = e.target.value.toLowerCase()
-		letterInput.current.blur()
-		if (secretWord.includes(letter)) {
-			const newSplitSecretWord = [...splitSecretWord].map(obj => {
-				if (obj.letter === letter) obj.discovered = true
-				return obj
-			})
-			setSplitSecretWord(newSplitSecretWord)
-			if (checkWin(splitSecretWord)) {
-				const winnerScore = scores[opponent] + 1
-				setScores({ ...scores, [opponent]: winnerScore })
-				setRoundEnded(true)
-				setWinner(opponent)
+	const addGuessedLetters = useCallback(
+		letter => {
+			if (!guessedLetters.includes(letter)) {
+				setGuessedLetters(currentLetters => [...currentLetters, letter])
 			}
-		} else {
-			setRemainigLifes(remainigLifes - 1)
-			setBodyPartsToShow(bodyPartsToShow + 1)
-			const wrongLetters =
-				prevGuesses.length > 0 ? `${prevGuesses}-${letter}` : letter
-			setPrevGuesses(wrongLetters)
-		}
-	}
+		},
+		[guessedLetters]
+	)
+
+	const activeLetters = guessedLetters.filter(letter =>
+		secretWord.includes(letter)
+	)
+
+	const incorrectLetters = guessedLetters.filter(
+		letter => !secretWord.includes(letter)
+	)
+
+	const isLoser = incorrectLetters.length >= INIT_LIFES
+
+	const isWinner =
+		secretWord &&
+		secretWord.split('').every(letter => guessedLetters.includes(letter))
+
+	const remainigLifes = INIT_LIFES - incorrectLetters.length
 
 	const resetGame = () => {
+		setSecretWord('')
+		setGuessedLetters([])
 		setGameStarted(false)
-		setRoundEnded(false)
-		setRemainigLifes(INIT_LIFES)
-		setBodyPartsToShow(0)
-		setPrevGuesses('')
-		setChallenger(switchTurns(challenger))
-		setOpponent(switchTurns(opponent))
+		setChallenger(switchPlayers(challenger))
+		setOpponent(switchPlayers(opponent))
 	}
 
 	useEffect(() => {
-		if (remainigLifes === 0) {
-			setRoundEnded(true)
-			setWinner(challenger)
+		if (isLoser) {
+			setScores(prevScores => ({
+				...prevScores,
+				[opponent]: prevScores[opponent] + 1,
+			}))
+		}
+		if (isWinner) {
 			setScores(prevScores => ({
 				...prevScores,
 				[challenger]: prevScores[challenger] + 1,
 			}))
 		}
-	}, [remainigLifes, challenger])
+	}, [isLoser, isWinner])
+
+	useEffect(() => {
+		if (gameStarted) {
+			const handler = e => {
+				const key = e.key.toUpperCase()
+
+				if (!key.match(/[A-Z]/)) return
+
+				e.preventDefault()
+				addGuessedLetters(key)
+			}
+
+			document.addEventListener('keypress', handler)
+
+			return () => {
+				document.removeEventListener('keypress', handler)
+			}
+		}
+	}, [gameStarted])
+
+	useEffect(() => {
+		if (error) {
+			const timeout = setTimeout(() => setError(null), 3000)
+
+			return () => {
+				clearTimeout(timeout)
+			}
+		}
+	}, [error])
 
 	return (
 		<Container>
-			<Header scores={scores} />
+			<Header scores={scores} challenger={challenger} />
 			<Sidebar>
-				<Body numOfBodyPartsToShow={bodyPartsToShow} loser={winner === 'red' ? 'blue' : 'red'} />
+				<Body
+					challenger={challenger}
+					isLoser={isLoser}
+					isWinner={isWinner}
+					numOfBodyPartsToShow={incorrectLetters.length}
+					remainigLifes={remainigLifes}
+				/>
 			</Sidebar>
-			<Content>
+			<Content gap={gameStarted && '1rem'}>
 				{gameStarted ? (
 					<Fragment>
-						<div className='secret-word'>
-							{splitSecretWord.map(({ letter, discovered }, idx) => (
-								<div key={idx} className='secret-letter'>
-									{discovered ? letter : <span className='red'>?</span>}
-								</div>
-							))}
-						</div>
-						<div className='letter-input'>
-							{roundEnded ? (
-								<Fragment>
-									<p>
-										<span className={winner}>{winner}</span> wins! 🥇
-									</p>
-									{winner === challenger && (
-										<p>
-											Secret word was: <span>{secretWord}</span>
-										</p>
-									)}
-									<button type='button' onClick={resetGame}>
-										Start New Round
-									</button>
-								</Fragment>
-							) : (
-								<Fragment>
-									<input
-										ref={letterInput}
-										type='text'
-										maxLength='1'
-										placeholder='Enter guess'
-										onChange={checkInSecretWord}
-										onClick={e => (e.target.value = '')}
-									/>
-									<p>
-										<span className={opponent}>{opponent}</span>'s lifes:{' '}
-										{makeHeartsArray(remainigLifes).map((heart, idx) => (
-											<span key={idx}>{heart}</span>
-										))}
-									</p>
-									{clue && (
-										<p>
-											💡 Here is a clue: <span className='clue'>{clue}</span>
-										</p>
-									)}
-									{prevGuesses && (
-										<p>
-											Wrong guesses: <span>{prevGuesses}</span>
-										</p>
-									)}
-								</Fragment>
-							)}
-						</div>
+						<SecretWord
+							guessedLetters={guessedLetters}
+							reveal={isLoser}
+							secretWord={secretWord}
+						/>
+						<Keyboard
+							activeLetters={activeLetters}
+							addGuessedLetters={addGuessedLetters}
+							disabled={isWinner || isLoser}
+							inactiveLetters={incorrectLetters}
+							resetGame={resetGame}
+						/>
 					</Fragment>
 				) : (
 					<Fragment>
 						<p>
-							It&apos;s <span className={challenger}>{challenger}</span>&apos;s
-							turn to challenge <span className={opponent}>{opponent}</span>!
+							<span className={challenger}>{challenger}</span>&apos;s turn to
+							guess. <span className={opponent}>{opponent}</span> must enter or
+							get a random secret word.
 						</p>
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmit} className='secret-word-form'>
 							<input
 								type='text'
 								placeholder='Enter secret word'
-								onChange={e => setSecretWord(e.target.value.toLowerCase())}
+								onChange={e =>
+									setSecretWord(
+										e.target.value.toUpperCase().replace(/[\W\d]/gi, '')
+									)
+								}
+								value={secretWord}
 							/>
 							<button type='submit'>Save</button>
 						</form>
-						<p>or</p>
+						<p>- or -</p>
 						<button
 							type='button'
-							onClick={getRandomWord}
-							disabled={apiStatus.loading}
-						>
-							{apiStatus.loading ? 'Loading...' : 'Get Random Secret Word'}
-						</button>
-						{apiStatus.error && (
+							onClick={() => getRandomWord('en')}
+							children={'Get Random English Word'}
+							disabled={!!error}
+						/>
+						<button
+							type='button'
+							onClick={() => getRandomWord('es')}
+							children={'Get Random Spanish Word'}
+							disabled={!!error}
+						/>
+						{error && (
 							<p>
-								<br />
-								<span>{apiStatus.error}</span>
+								<span>{error}</span>
 							</p>
 						)}
 					</Fragment>

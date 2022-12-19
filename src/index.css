@@ -15,7 +15,7 @@ body {
 	font-size: 1em;
 }
 
-.wrapper {
+main {
 	display: grid;
 	gap: 20px;
 	grid-template-areas:
@@ -27,7 +27,7 @@ body {
 }
 
 @media (min-width: 700px) {
-	.wrapper {
+	main {
 		grid-template-columns: 1fr 3fr;
 		grid-template-areas:
 			'header  header'
@@ -35,8 +35,7 @@ body {
 	}
 }
 
-/* @Todo: remove */
-.wrapper > * {
+main > * {
 	border: 1px solid darkgreen;
 	background-color: lightyellow;
 	border-radius: 5px;
@@ -55,170 +54,21 @@ h1 {
 	color: darkgreen;
 }
 
-.scores {
-	width: 100%;
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	font-size: 1.2rem;
-}
-
 aside {
 	grid-area: sidebar;
 }
 
 article {
 	grid-area: content;
-}
-
-p, form {
-	margin-bottom: 1rem;
-}
-
-.body-container {
-	position: relative;
-	min-height: 260px;
-	border-left: 10px solid brown;
-}
-
-.hanger {
-	position: absolute;
-	top: 0;
-	left: 0px;
-	width: calc(100% - 48%);
-	height: 30px;
-	border-top: 10px solid brown;
-	border-right: 10px solid brown;
-}
-
-.head {
-	position: absolute;
-	top: 30px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 50px;
-	height: 50px;
-	border: 2px solid black;
-	border-radius: 50%;
-}
-
-.neck {
-	position: absolute;
-	top: 80px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 1px;
-	height: 25px;
-	border-left: 2px solid black;
-}
-
-.left-arm {
-	position: absolute;
-	top: 104px;
-	right: 50%;
-	transform-origin: 100% 0;
-	transform: rotate(-45deg) translateY(-50%);
-	width: 60px;
-	height: 1px;
-	border-top: 2px solid black;
-}
-
-.right-arm {
-	position: absolute;
-	top: 104px;
-	left: 50%;
-	transform-origin: 0 100%;
-	transform: rotate(45deg);
-	width: 60px;
-	height: 1px;
-	border-top: 2px solid black;
-}
-
-.torso {
-	position: absolute;
-	top: 105px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 1px;
-	height: 75px;
-	border-left: 2px solid black;
-}
-
-.left-leg {
-	position: absolute;
-	top: 179px;
-	right: 50%;
-	transform-origin: 100% 0;
-	transform: rotate(-45deg) translateY(-50%);
-	width: 60px;
-	height: 1px;
-	border-top: 2px solid black;
-}
-
-.right-leg {
-	position: absolute;
-	top: 179px;
-	left: 50%;
-	transform-origin: 0 100%;
-	transform: rotate(45deg);
-	width: 60px;
-	height: 1px;
-	border-top: 2px solid black;
-}
-
-.loose-msg {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translateX(-50%) translateY(-50%);
-	width: 60%;
-	padding: 6px;
-	background-color: darkred;
-	color: white;
-	font-size: 1.2rem;
-	font-weight: bold;
-	word-wrap: break-word;
-	text-transform: uppercase;
-	text-align: center;
-	z-index: 99;
-}
-
-.bg-red {
-	background-color: red;
-}
-
-.bg-blue {
-	background-color: blue;
-}
-
-.secret-word {
 	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	padding: 1rem 0 1.5rem;
-	margin-bottom: 1.5rem;
-	border-bottom: 1px solid darkgreen;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.5rem;
 }
 
-.secret-letter {
-	display: block;
-	background-color: white;
-	color: darkgreen;
-	font-size: 1.3rem;
-	font-weight: bold;
-	padding: 6px 10px;
-	border: 1px solid darkgray;
-	border-bottom: 2px solid darkgreen;
-	border-radius: 5px;
+p > span {
 	text-transform: uppercase;
-}
-
-.red {
 	color: red;
-}
-
-.blue {
-	color: blue;
 }
 
 input,
@@ -243,31 +93,4 @@ input::placeholder {
 	font-size: 1rem;
 	text-transform: none;
 	font-weight: bold;
-}
-
-.letter-input {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-
-.letter-input > input {
-	text-align: center;
-	font-size: 1.2rem;
-	max-width: 150px;
-}
-
-.letter-input > * {
-	margin-bottom: 1.5rem;
-}
-
-p > span {
-	text-transform: uppercase;
-	color: darkred;
-}
-
-.clue {
-	font-style: italic;
-	color: dodgerblue;
 }

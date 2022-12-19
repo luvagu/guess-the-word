@@ -1,0 +1,254 @@
+.scores {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	font-size: 1.2rem;
+}
+
+.body-container {
+	position: relative;
+	min-height: 260px;
+	height: 100%;
+	border-left: 5px solid goldenrod;
+	border-bottom: 5px solid goldenrod;
+}
+
+.hanger {
+	position: absolute;
+	top: 0;
+	left: 0px;
+	width: calc(100% - 50% + 2.5px);
+	height: 30px;
+	border-top: 5px solid goldenrod;
+	border-right: 5px solid goldenrod;
+}
+
+.head {
+	position: absolute;
+	top: 30px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 50px;
+	height: 50px;
+	border: 3px solid black;
+	border-radius: 50%;
+}
+
+.neck {
+	position: absolute;
+	top: 80px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 3px;
+	height: 50px;
+	border-left: 3px solid black;
+}
+
+.left-arm {
+	position: absolute;
+	top: 127px;
+	right: 50%;
+	transform-origin: 100% 0;
+	transform: rotate(35deg) translateY(-50%);
+	width: 60px;
+	height: 1px;
+	border-top: 3px solid black;
+}
+
+.right-arm {
+	position: absolute;
+	top: 125px;
+	left: 50%;
+	transform-origin: 0 100%;
+	transform: rotate(-35deg) translateY(50%);
+	width: 60px;
+	height: 1px;
+	border-top: 3px solid black;
+}
+
+.torso {
+	position: absolute;
+	top: 105px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 1px;
+	height: 75px;
+	border-left: 3px solid black;
+}
+
+.left-leg {
+	position: absolute;
+	top: 179px;
+	right: 50%;
+	transform-origin: 100% 0;
+	transform: rotate(-45deg) translateY(-50%);
+	width: 60px;
+	height: 1px;
+	border-top: 3px solid black;
+}
+
+.right-leg {
+	position: absolute;
+	top: 177px;
+	left: 50%;
+	transform-origin: 0 100%;
+	transform: rotate(45deg);
+	width: 60px;
+	height: 1px;
+	border-top: 3px solid black;
+}
+
+.lives {
+	position: absolute;
+	bottom: 6px;
+	font-size: 1rem;
+	width: 100%;
+	text-align: center;
+}
+
+.end-game-msg {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	width: 60%;
+	padding: 6px;
+	color: white;
+	font-size: 1.2rem;
+	font-weight: bold;
+	word-wrap: break-word;
+	text-transform: uppercase;
+	text-align: center;
+	z-index: 99;
+}
+
+.bg-red {
+	background-color: hsla(0, 100%, 50%, 0.9);
+}
+
+.bg-blue {
+	background-color: hsla(245, 100%, 50%, 0.9);
+}
+
+.bg-green {
+	background-color: hsla(122, 100%, 50%, 0.9);
+}
+
+.bg-turn-red {
+	background-color: hsla(0, 100%, 50%, 0.3);
+	padding: 0 0.2rem;
+	border-radius: 3px;
+}
+
+.bg-turn-blue {
+	background-color: hsla(245, 100%, 50%, 0.3);
+	padding: 0 0.2rem;
+	border-radius: 3px;
+}
+
+.secret-word-form {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.secret-word {
+	align-self: stretch;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem;
+	border-bottom: 1px solid darkgreen;
+}
+
+.secret-letter {
+	display: block;
+	background-color: white;
+	color: darkgreen;
+	font-size: 1.3rem;
+	font-weight: bold;
+	padding: 6px 10px;
+	border: 1px solid darkgray;
+	border-bottom: 2px solid darkgreen;
+	border-radius: 5px;
+	text-transform: uppercase;
+}
+
+.red {
+	color: red;
+}
+
+.blue {
+	color: blue;
+}
+
+.letter-input {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.letter-input > input {
+	text-align: center;
+	font-size: 1.2rem;
+	max-width: 150px;
+}
+
+.letter-input > * {
+	margin-bottom: 1.5rem;
+}
+
+.clue {
+	font-style: italic;
+	color: dodgerblue;
+}
+
+.keyboard {
+	align-self: stretch;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+	gap: 0.5rem;
+}
+
+.kbtn {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	border: 2px solid darkgreen;
+	background: none;
+	aspect-ratio: 1.5 / 1;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: black;
+	text-transform: uppercase;
+	padding: 0.5rem;
+	cursor: pointer;
+}
+
+@media (max-width: 700px) {
+	.kbtn {
+		aspect-ratio: 2 / 1;
+		font-size: 1rem;
+	}
+}
+
+.kbtn.active {
+	background-color: hsl(200, 100%, 50%);
+	color: white;
+}
+
+.kbtn.inactive {
+	opacity: 0.3;
+}
+
+.kbtn.reset {
+	background-color: hsla(122, 100%, 50%, 0.9);
+}
+
+.kbtn:hover:not(:disabled),
+.kbtn:focus:not(:disabled) {
+	background-color: hsl(200, 100%, 75%);
+}

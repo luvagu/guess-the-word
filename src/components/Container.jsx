@@ -1,5 +1,5 @@
 function Container({ children }) {
-	return <div className='wrapper' children={children} />
+	return <main children={children} />
 }
 
 export default Container

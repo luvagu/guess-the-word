@@ -1,5 +1,10 @@
-function LooseMsg({ loser }) {
-	return <div className={`loose-msg bg-${loser}`}>{loser} Loses!</div>
+function LooseMsg({ challenger }) {
+	return (
+		<div
+			className={`end-game-msg bg-${challenger}`}
+			children={`${challenger} Loses! 😞`}
+		/>
+	)
 }
 
 export default LooseMsg
